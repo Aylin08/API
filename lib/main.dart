@@ -1,10 +1,12 @@
 import 'package:api/pages/info.dart';
+import 'package:api/services/info_services.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -18,9 +20,11 @@ class _MyAppState extends State<MyApp> {
         "al18760439@ite.edu.mx"),
     Persona("18760444", "Carlos Pacheco", "I.G.E", "7mo", "6462481177",
         "al18760444@ite.edu.mx"),
+    //Persona(matricula, name, carrera, semestre, telefono, email)
   ];
   @override
   Widget build(BuildContext context) {
+    final calis = Provider.of<InfoServices>(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
