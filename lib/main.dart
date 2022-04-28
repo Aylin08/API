@@ -1,30 +1,36 @@
 import 'package:api/pages/info.dart';
-import 'package:api/services/info_services.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'dart:async' show Future;
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:convert';
+import 'package:flutter/services.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatefulWidget {
-  MyApp({Key? key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  final List<Persona> _personas = [
-    Persona("18760442", "Luisa Aylin Gallegos Cabrera", " I.S.C", "8vo",
-        "6462563511", "al18760442@ite.edu.mx"),
-    Persona("18760439", "Cristian Castro", "Lic. Música", "9no", "646124567",
-        "al18760439@ite.edu.mx"),
-    Persona("18760444", "Carlos Pacheco", "I.G.E", "7mo", "6462481177",
-        "al18760444@ite.edu.mx"),
-    //Persona(matricula, name, carrera, semestre, telefono, email)
-  ];
+  List _personas = [];
+
+  Future<String> loadJsonData() async {
+    var jsonDirec = await rootBundle.loadString('Json/Informacion.json');
+    setState(() => _personas = json.decode(jsonDirec));
+    return 'success';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadJsonData();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final calis = Provider.of<InfoServices>(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -41,30 +47,33 @@ class _MyAppState extends State<MyApp> {
               ),
             ),
             child: ListView.builder(
-              itemCount: _personas.length,
+              itemCount: _personas == null ? 0 : _personas.length,
               itemBuilder: (BuildContext context, int index) {
+                var mat = _personas[index]['matricula'];
+                var nom = _personas[index]['nombre'];
+                var car = _personas[index]['carrera'];
+                var sem = _personas[index]['semestre'];
+                var email = _personas[index]['email'];
+                var telefono = _personas[index]['telefono'];
                 return ListTile(
                   onLongPress: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => Info(
-                              matricula: _personas[index].matricula,
-                              nombre: _personas[index].name,
-                              carrera: _personas[index].carrera,
-                              semestre: _personas[index].semestre,
-                              telefono: _personas[index].telefono,
-                              email: _personas[index].email)),
+                              matricula: mat,
+                              nombre: nom,
+                              carrera: car,
+                              semestre: sem,
+                              telefono: telefono,
+                              email: email)),
                     );
-                    // _borrarPersona(context, _personas[index]);
                   },
-                  title: Text(
-                      // ignore: prefer_interpolation_to_compose_strings
-                      _personas[index].name + ' ' + _personas[index].carrera),
-                  subtitle: Text(_personas[index].telefono),
+                  title: Text(nom + ' ' + car),
+                  subtitle: Text(telefono),
                   leading: CircleAvatar(
                     backgroundColor: const Color.fromARGB(255, 99, 68, 57),
-                    child: Text(_personas[index].name.substring(0, 1)),
+                    child: Text(nom.substring(0, 1)),
                   ),
                   trailing: const Icon(Icons.arrow_forward_ios),
                 );
@@ -72,32 +81,6 @@ class _MyAppState extends State<MyApp> {
             ),
           )),
     );
-  }
-
-  _borrarPersona(context, Persona persona) {
-    showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-              title: const Text("Eliminar"),
-              content: const Text("¿Seguro que deseas eliminarlo de la lista?"),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text("Cancel")),
-                TextButton(
-                    onPressed: () {
-                      setState(() {
-                        _personas.remove(persona);
-                      });
-
-                      Navigator.pop(context);
-                    },
-                    child: const Text("Delete",
-                        style: TextStyle(color: Colors.red)))
-              ],
-            ));
   }
 }
 
