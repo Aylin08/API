@@ -1,9 +1,11 @@
 import 'package:api/pages/info.dart';
+import 'package:api/services/persona_services.dart';
 import 'package:flutter/material.dart';
 import 'dart:async' show Future;
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 void main() => runApp(const MyApp());
 
@@ -31,6 +33,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final informacionAlumno = Provider.of<PersonaServices>(context);
+    // print(informacionAlumno.aux.estudianteUno);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
