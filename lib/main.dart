@@ -9,32 +9,29 @@ import 'package:provider/provider.dart';
 
 void main() => runApp(const MyApp());
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
   @override
-  State<MyApp> createState() => _MyAppState();
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      // Los providers gestionan los servicios
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => PersonaServices(),
+        ),
+      ],
+      child: const _MyAppState(),
+    );
+  }
 }
 
-class _MyAppState extends State<MyApp> {
-  List _personas = [];
-
-  Future<String> loadJsonData() async {
-    var jsonDirec = await rootBundle.loadString('Json/Informacion.json');
-    setState(() => _personas = json.decode(jsonDirec));
-    return 'success';
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    loadJsonData();
-  }
+class _MyAppState extends StatelessWidget {
+  const _MyAppState([Key? key]) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final informacionAlumno = Provider.of<PersonaServices>(context);
-    // print(informacionAlumno.aux.estudianteUno);
+    print(informacionAlumno.aux.estudianteUno);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -50,15 +47,11 @@ class _MyAppState extends State<MyApp> {
                 fit: BoxFit.cover,
               ),
             ),
-            child: ListView.builder(
+            /* child: ListView.builder(
+              // ignore: unnecessary_null_comparison
               itemCount: _personas == null ? 0 : _personas.length,
               itemBuilder: (BuildContext context, int index) {
-                var mat = _personas[index]['matricula'];
-                var nom = _personas[index]['nombre'];
-                var car = _personas[index]['carrera'];
-                var sem = _personas[index]['semestre'];
-                var email = _personas[index]['email'];
-                var telefono = _personas[index]['telefono'];
+               
                 return ListTile(
                   onLongPress: () {
                     Navigator.push(
@@ -82,7 +75,7 @@ class _MyAppState extends State<MyApp> {
                   trailing: const Icon(Icons.arrow_forward_ios),
                 );
               },
-            ),
+            ),*/
           )),
     );
   }
