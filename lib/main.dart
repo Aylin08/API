@@ -1,10 +1,7 @@
 import 'package:api/pages/info.dart';
 import 'package:api/services/persona_services.dart';
 import 'package:flutter/material.dart';
-import 'dart:async' show Future;
-import 'package:flutter/services.dart' show rootBundle;
-import 'dart:convert';
-import 'package:flutter/services.dart';
+
 import 'package:provider/provider.dart';
 
 void main() => runApp(const MyApp());
@@ -31,7 +28,7 @@ class _MyAppState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final informacionAlumno = Provider.of<PersonaServices>(context);
-    print(informacionAlumno.aux.estudianteUno);
+    // print(informacionAlumno.listaAlumno[0].matricula);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -47,48 +44,47 @@ class _MyAppState extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-            /* child: ListView.builder(
+            child: ListView.builder(
               // ignore: unnecessary_null_comparison
-              itemCount: _personas == null ? 0 : _personas.length,
+              itemCount: informacionAlumno.listaAlumno.length,
               itemBuilder: (BuildContext context, int index) {
-               
                 return ListTile(
                   onLongPress: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => Info(
-                              matricula: mat,
-                              nombre: nom,
-                              carrera: car,
-                              semestre: sem,
-                              telefono: telefono,
-                              email: email)),
+                              matricula: informacionAlumno
+                                  .listaAlumno[index].matricula
+                                  .toString(),
+                              nombre:
+                                  informacionAlumno.listaAlumno[index].nombre,
+                              carrera:
+                                  informacionAlumno.listaAlumno[index].carrera,
+                              semestre:
+                                  informacionAlumno.listaAlumno[index].semestre,
+                              telefono: informacionAlumno
+                                  .listaAlumno[index].telefono
+                                  .toString(),
+                              email:
+                                  informacionAlumno.listaAlumno[index].email)),
                     );
                   },
-                  title: Text(nom + ' ' + car),
-                  subtitle: Text(telefono),
+                  title: Text(
+                      '${informacionAlumno.listaAlumno[index].nombre} ${informacionAlumno.listaAlumno[index].carrera}'),
+                  subtitle: Text(
+                      informacionAlumno.listaAlumno[index].telefono.toString()),
                   leading: CircleAvatar(
                     backgroundColor: const Color.fromARGB(255, 99, 68, 57),
-                    child: Text(nom.substring(0, 1)),
+                    child: Text(informacionAlumno.listaAlumno[index].nombre
+                        .toString()
+                        .substring(0, 1)),
                   ),
                   trailing: const Icon(Icons.arrow_forward_ios),
                 );
               },
-            ),*/
+            ),
           )),
     );
   }
-}
-
-class Persona {
-  String matricula;
-  String name;
-  String carrera;
-  String semestre;
-  String telefono;
-  String email;
-
-  Persona(this.matricula, this.name, this.carrera, this.semestre, this.telefono,
-      this.email);
 }
